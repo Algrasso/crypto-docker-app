@@ -1,18 +1,42 @@
-# 1️⃣ Base image with OpenJDK 17 (for Spark)
-FROM openjdk:17-jdk-slim
+# ─────────────────────────────
+# Stage 1: Build the Linux binary
+# ─────────────────────────────
+FROM python:3.12-slim AS builder
 
-# 2️⃣ Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# 3️⃣ Optional: Set JAVA_HOME for Spark
-ENV JAVA_HOME=/usr/local/openjdk-17
-ENV PATH=$JAVA_HOME/bin:$PATH
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        build-essential \
+        python3-dev \
+        && rm -rf /var/lib/apt/lists/*
 
-# 4️⃣ Copy the compiled executable into the container
-COPY app/main.exe /app/main.exe
+# Install PyInstaller
+RUN pip install --no-cache-dir pyinstaller
 
-# 5️⃣ Expose Spark UI port if needed
+# Copy all Python source files
+COPY app/ ./
+
+# Build the executable
+RUN pyinstaller --onefile --name main main.py
+
+# ─────────────────────────────
+# Stage 2: Runtime
+# ─────────────────────────────
+FROM openjdk:17-jdk-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the compiled Linux binary from builder stage
+COPY --from=builder /app/dist/main .
+
+# Expose any ports if needed (optional)
 EXPOSE 4040
 
-# 6️⃣ Default command: run the compiled binary
-CMD ["/app/main.exe"]
+# Run the binary
+CMD ["./main"]
+

@@ -1,42 +1,57 @@
-# ─────────────────────────────
-# Stage 1: Build the Linux binary
-# ─────────────────────────────
+# ──────────────────────────────
+# Stage 1: Builder
+# ──────────────────────────────
 FROM python:3.12-slim AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /build
 
 # Install build dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        curl \
-        build-essential \
-        python3-dev \
-        && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PyInstaller
 RUN pip install --no-cache-dir pyinstaller
 
-# Copy all Python source files
-COPY app/ ./
+# Copy app source code and requirements
+COPY app/ ./app/
+COPY requirements.txt .
 
-# Build the executable
-RUN pyinstaller --onefile --name main main.py
+# Install Python dependencies needed for build
+RUN pip install --no-cache-dir -r requirements.txt
 
-# ─────────────────────────────
+# Build the Linux binary for main.py
+# PyInstaller automatically bundles imports from other app files
+RUN pyinstaller --onefile --name main app/main.py
+
+# ──────────────────────────────
 # Stage 2: Runtime
-# ─────────────────────────────
-FROM openjdk:17-jdk-slim
+# ──────────────────────────────
+FROM debian:bookworm-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy only the compiled Linux binary from builder stage
-COPY --from=builder /app/dist/main .
+# Install minimal runtime dependencies for Linux binary
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Expose any ports if needed (optional)
+# Copy only the compiled binary from the builder stage
+COPY --from=builder /build/dist/main ./main
+
+# Make binary executable
+RUN chmod +x ./main
+
+# Expose ports if your app has a UI
 EXPOSE 4040
 
 # Run the binary
 CMD ["./main"]
-

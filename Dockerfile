@@ -5,10 +5,9 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 3️⃣ Install system dependencies for PySpark
-RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk-headless curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # 4️⃣ Set JAVA_HOME for PySpark
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64

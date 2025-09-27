@@ -6,7 +6,9 @@ For testing purposes a 45 minutes timeout was set and the crypto currency value 
 
 ## BUSINESS PROBLEM
 **To predict in real time if the price of the crypto currency will increase in the following 6 hours**
+
 Data is collected and aggregated in 5 minutes batches and a predictive model was trained using daily hisotrical data and 1 minute candle real time streaming data.
+
 Input features include, and are not limited to, the following signals:
 
 ```

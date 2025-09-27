@@ -1,4 +1,9 @@
-pyspark==3.5.0
 requests==2.31.0
 yfinance==0.2.33
 lightgbm==3.3.2
+pyspark>=3.5.0
+pandas
+numpy
+lightgbm
+scikit-learn
+pyarmor

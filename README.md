@@ -159,7 +159,10 @@ Source code and ML models are proprietary and included in the Docker image
 
 Use Ctrl+C for graceful shutdown
 
-The Spark UI is available at http://localhost:4040 when running
+The Spark UI is available at http://localhost:4040 when running through bash:
+```
+docker run -it --rm -p 4040:4040 algrasso/crypto-app:latest
+```
 
 ## ❓ Need Help?
 If you encounter persistent issues:

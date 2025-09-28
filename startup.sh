@@ -12,5 +12,3 @@ python app/crypto_data.py &
 # Spark processor runs in foreground, PID 1 receives Ctrl+C
 echo "3. Starting Spark processor..."
 exec python -u app/main.py
-
-echo "Application stopped (timeout or completed)"

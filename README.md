@@ -103,7 +103,9 @@ docker run -it --rm algrasso/crypto-app:latest
 
 ## ⏹️ Stopping the Application
 
-If you want to stop the app before the 45 minutes automatic timeout, since source files are abfuscated, a new terminal (gitbash, powershell, etc.) is to be opened:
+Press Ctrl+C in the terminal where the application is running. The container will automatically clean up thanks to the --rm flag.
+
+If it does not work, open a new terminal (gitbash, powershell, etc.):
 
 - docker ps #copy the container id
 

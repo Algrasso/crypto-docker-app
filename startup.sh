@@ -1,10 +1,5 @@
-
-# This runs after timeout or normal completion
-echo "⏰ Application stopped (timeout or completed)"
-
-
 #!/bin/bash
-echo "🚀 Starting Crypto App..."
+echo "Starting Crypto App..."
 
 # Historical collector runs first
 echo "1. Running historical collector..."
@@ -18,5 +13,4 @@ python app/crypto_data.py &
 echo "3. Starting Spark processor..."
 exec python -u app/main.py
 
-# Optional: cleanup happens when main.py exits
-echo "⏰ Application stopped"
+echo "Application stopped (timeout or completed)"

@@ -38,27 +38,29 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install runtime system deps
+# Install runtime system deps including dos2unix
 RUN apt-get update && apt-get install -y \
     openjdk-21-jre-headless \
     libgomp1 \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy only the obfuscated app and protected models from builder stage
-COPY --from=builder /app/obfuscated ./app/
+COPY --from=builder /app/obfuscated/ ./
 COPY --from=builder /app/protected_models ./models/
 COPY requirements.txt .
 COPY startup.sh .
 
-# Install runtime Python dependencies and the PyArmor runtime
-# Note: do not install 'pyarmor' (the build tool) here; only the runtime.
+# Fix line endings and make executable
+RUN dos2unix startup.sh && \
+    chmod +x startup.sh
+
+# Install runtime Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN chmod +x startup.sh
-
 ENV PYSPARK_PYTHON=python3
-ENV PYTHONPATH=/app/app
+ENV PYTHONPATH=/app
 
 EXPOSE 4040
 
-CMD ["./startup.sh"]
+CMD ["/bin/sh", "./startup.sh"]

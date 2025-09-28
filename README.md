@@ -4,7 +4,7 @@ A real-time **Spark Structured Streaming** application that tracks live cryptocu
 
 For testing purposes a 45 minutes timeout was set and the crypto currency value is stellar XLM/USDT.
 
-## BUSINESS PROBLEM
+## Business Problem
 **To predict in real time if the price of the crypto currency will increase in the following 6 hours**
 
 Data is collected and aggregated in 5 minutes batches and a predictive model was trained using daily hisotrical data and 1 minute candle real time streaming data.
@@ -102,7 +102,13 @@ docker run -it --rm algrasso/crypto-app:latest
 ```
 
 ## ⏹️ Stopping the Application
-- Press Ctrl+C in the terminal where the application is running. The container will automatically clean up thanks to the --rm flag.
+
+If you want to stop the app before the 45 minutes automatic timeout, since source files are abfuscated, a new terminal (gitbash, powershell, etc.) is to be opened:
+
+- docker ps #copy the container id
+
+- docker kill <container id>
+
 
 ## 🔄 Restarting
 After a normal stop, simply run the command again:

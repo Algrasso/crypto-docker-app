@@ -109,7 +109,7 @@ If it does not work, open a new terminal (gitbash, powershell, etc.):
 
 - docker ps #copy the container id
 
-- docker kill <container id>
+- docker kill container id
 
 
 ## 🔄 Restarting
